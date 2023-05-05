@@ -1,0 +1,7 @@
+measurement_id,person_id,measurement_concept_id,measurement_date,measurement_datetime,measurement_time,measurement_type_concept_id,operator_concept_id,value_as_number,value_as_concept_id,unit_concept_id,range_low,range_high,provider_id,visit_occurrence_id,visit_detail_id,measurement_source_value,measurement_source_concept_id,unit_source_value,value_source_value
+2,1,3038553,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,23,NULL,8753,NULL,NULL,100,12,NULL,1526212,NULL,kg/m2,23
+3,1,3020460,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,15.8,NULL,8753,NULL,NULL,100,13,NULL,1534098,NULL,mg/L,15.8
+5,2,3038553,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,24,NULL,8753,NULL,NULL,200,23,NULL,1534101,NULL,kg/m2,24
+6,2,3020460,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,100,NULL,8753,NULL,NULL,200,24,NULL,1534101,NULL,mg/L,100
+7,3,3038553,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,21,NULL,8753,NULL,NULL,300,32,NULL,1534101,NULL,kg/m2,21
+8,3,3020460,1/1/00,1/1/00 0:00,00:00.0,32856,4172703,5.4,NULL,8753,NULL,NULL,300,33,NULL,1534101,NULL,mg/L,5.4

@@ -1,0 +1,34 @@
+concept_id,concept_name,domain_id,vocabulary_id,concept_class_id,standard_concept,concept_code,valid_start_date,valid_end_date,invalid_reason
+194684,Crohn's disease of large bowel,Condition,SNOMED,Clinical Finding,S,7620006,1/31/02,12/31/99,NULL
+4177488,Crohn's disease of colon,Condition,SNOMED,Clinical Finding,S,50440006,1/31/02,12/31/99,NULL
+4239382,Crohn's disease of jejunum,Condition,SNOMED,Clinical Finding,S,91390005,1/31/02,12/31/99,NULL
+4242392,Crohn's disease of rectum,Condition,SNOMED,Clinical Finding,S,3815005,1/31/02,12/31/99,NULL
+4244235,Crohn's disease of ileum,Condition,SNOMED,Clinical Finding,S,38106008,1/31/02,12/31/99,NULL
+4246693,Crohn's disease of intestine,Condition,SNOMED,Clinical Finding,S,397173003,7/31/03,12/31/99,NULL
+4266370,Crohn's disease of pylorus,Condition,SNOMED,Clinical Finding,S,61424003,1/31/02,12/31/99,NULL
+4210469,Crohn's disease of duodenum,Condition,SNOMED,Clinical Finding,S,56287005,1/31/02,12/31/99,NULL
+36715915,Crohn disease of anal canal,Condition,SNOMED,Clinical Finding,S,721702009,1/31/17,12/31/99,NULL
+36716695,Crohn's disease of gastrointestinal anastomosis,Condition,SNOMED,Clinical Finding,S,722850002,1/31/17,12/31/99,NULL
+195575,Crohn's disease of small AND large intestines,Condition,SNOMED,Clinical Finding,S,71833008,1/31/02,12/31/99,NULL
+195585,Crohn's disease of small intestine,Condition,SNOMED,Clinical Finding,S,56689002,1/31/02,12/31/99,NULL
+201606,Crohn's disease,Condition,SNOMED,Clinical Finding,S,34000006,1/31/02,12/31/99,NULL
+4323289,Crohn's disease of pyloric antrum,Condition,SNOMED,Clinical Finding,S,70622003,1/31/02,12/31/99,NULL
+36686095,Crohn's disease of small intestine with stenosis,Condition,SNOMED,Clinical Finding,S,1.07E+16,1/31/19,12/31/99,NULL
+4290835,Crohn's disease of skin,Condition,SNOMED,Clinical Finding,S,399946006,7/31/03,12/31/99,NULL
+4292361,Crohn's disease of scrotum,Condition,SNOMED,Clinical Finding,S,402377001,7/31/03,12/31/99,NULL
+4297643,Crohn's disease of vulva,Condition,SNOMED,Clinical Finding,S,402375009,7/31/03,12/31/99,NULL
+4299294,Crohn's disease of penis,Condition,SNOMED,Clinical Finding,S,402376005,7/31/03,12/31/99,NULL
+4340114,Crohn's disease of esophagus,Condition,SNOMED,Clinical Finding,S,235607002,1/31/02,12/31/99,NULL
+4342643,Crohn's disease of stomach,Condition,SNOMED,Clinical Finding,S,235664007,1/31/02,12/31/99,NULL
+4055020,Crohn's disease of terminal ileum,Condition,SNOMED,Clinical Finding,S,196977009,1/31/02,12/31/99,NULL
+4055884,Crohn's disease of oral soft tissues,Condition,SNOMED,Clinical Finding,S,196578009,1/31/02,12/31/99,NULL
+37116446,Crohn disease of appendix,Condition,SNOMED,Clinical Finding,S,733157003,7/31/17,12/31/99,NULL
+4122617,Crohn's disease of gingivae,Condition,SNOMED,Clinical Finding,S,234999001,1/31/02,12/31/99,NULL
+42537666,Crohn disease of upper gastrointestinal tract,Condition,SNOMED,Clinical Finding,S,737195007,1/31/18,12/31/99,NULL
+3038553,Body mass index (BMI) [Ratio],Measurement,LOINC,Clinical Observation,S,39156-5,1/1/70,12/31/99,NULL
+46234770,C reactive protein [Moles/volume] in Serum or Plasma,Measurement,LOINC,Lab Test,S,76485-2,5/8/15,12/31/99,NULL
+3020460,C reactive protein [Mass/volume] in Serum or Plasma,Measurement,LOINC,Lab Test,S,1988-5,1/1/70,12/31/99,NULL
+40825614,Azathioprine 75 MG Oral Tablet [Azathioprin Hexal] Box of 100,Drug,RxNorm Extension,Branded Drug Box,S,OMOP2023576,8/24/17,12/31/99,NULL
+1972450,infliximab 100 MG Injectable Suspension [Remicade] Box of 2 by Originalis,Drug,RxNorm Extension,Marketed Product,S,OMOP5165017,1/28/22,12/31/99,NULL
+19099981,methotrexate 100 MG/ML,Drug,RxNorm,Clinical Drug Comp,S,360547,1/1/70,12/31/99,NULL
+975505,hydrocortisone 100 MG Injection,Drug,RxNorm,Clinical Drug,S,238755,1/1/70,12/31/99,NULL
