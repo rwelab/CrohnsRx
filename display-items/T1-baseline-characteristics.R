@@ -3,47 +3,57 @@ library(table1)     # table 1
 
 setwd('UCSF/ipd-ma-cd2-2')
 
-## Characteristics Table 1
+# data frame
+crohns_data1 <- read.csv("data/crohns_data_raw.csv") %>% 
+  dplyr::select(Group, Trial, DrugClass, Year, CDAI_baseline, Age, BMI, 
+                CRP, HxOfTNFi, Sex_Male, SteroidUse, ImmUse, Ileal)
 
-tbl1 <- crohnsData_wk8_imputed %>% 
+#------------------------------------------------------------------------------#
+
+tbl1 <- crohns_data1 %>% 
   # re-factor categorical variables
-  mutate(SEX.FEMALE = abs(SEX.MALE - 1)) %>% 
-  mutate(SEX.FEMALE = factor(SEX.FEMALE, 
+  mutate(Sex_Female = abs(Sex_Male - 1)) %>% 
+  mutate(Sex_Female = factor(Sex_Female, 
                              levels=c(1,0), 
                              labels=c('Female','Male'))) %>% 
   mutate(HxOfTNFi   = factor(HxOfTNFi,
                              levels=c(1,0),
                              labels=c('Yes','No'))) %>% 
-  mutate(STEROID    = factor(STEROID,
+  mutate(SteroidUse = factor(SteroidUse,
                              levels=c(1,0),
                              labels=c('Yes','No'))) %>% 
-  mutate(IMMUNOMOD  = factor(IMMUNOMOD,
+  mutate(ImmUse     = factor(ImmUse,
                              levels=c(1,0),
                              labels=c('Yes','No'))) %>% 
-  mutate(LOC.ILEAL  = factor(LOC.ILEAL,
+  mutate(Ileal      = factor(Ileal,
                              levels=c(1,0),
-                             labels=c('Yes','No'))) %>% 
-  filter(DRUG != 'ADA')
+                             labels=c('Yes','No')))
 
+tbl1 %>% glimpse()
+
+#------------------------------------------------------------------------------#
+
+# Format continuous covariates Mean (sd)
 my.render.cont <- function(x){
   with(stats.apply.rounding(stats.default(x), digits=2), 
        c("", "Mean (SD)"=sprintf("%s (&plusmn; %s)", MEAN, SD)))
 }
 
+# Format binary covariates N (%)
 my.render.cat <- function(x) {
   c("", sapply(stats.default(x), function(y) with(y, sprintf("%d (%0.0f %%)", FREQ, PCT))))
 }
 
-my.render <- function(x,...) {
-  y <- render.default(x,...)
-  if(is.factor(x)) y[2] else y
-}
-
-table1(~ TRTGRP + AGE + SEX.FEMALE + BMI + CDAI_BASELINE + CRP..mgL + HxOfTNFi + 
-         STEROID + IMMUNOMOD + LOC.ILEAL | DRUG*TRIAL, 
+table1(~ Group + Age + Sex_Female + BMI + CDAI_baseline + CRP + HxOfTNFi + 
+         SteroidUse + ImmUse + Ileal | DrugClass*Trial, 
        data=tbl1,
        overall=FALSE,
-       # render = my.render,
        render.continuous = my.render.cont, 
        render.categorical= my.render.cat,
        droplevels = T)
+
+#------------------------------------------------------------------------------#
+
+# copy-paste tabel to word document and modify
+
+#------------------------------------------------------------------------------#
