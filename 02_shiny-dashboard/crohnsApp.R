@@ -42,7 +42,7 @@ introductory.text.3 <- "
   prospectively validated. Clinicians desiring to use this tool to inform patient 
   care are advised to exercise an appropriate level of caution. Please note that 
   this model does not yet incorporate recommendations for any FDA-approved 
-  treatment as of 2020 or later (e.g. Risankizumab)."
+  treatment as of 2020 or later (e.g. Risankizumab, Upadacitinib)."
 
 introductory.text.4 <- "
   Users should also be aware that this model is only designed to make recommendations 
@@ -100,9 +100,9 @@ ui_recommender <- function() {
          
          # BMI, CRP
          fixedRow(
-           column(4, textInput("bmi", 
-                               value = NULL, 
-                               label = 'BMI (kg/m2)', 
+           column(4, textInput("bmi",
+                               value = NULL,
+                               label = 'BMI (kg/m2)',
                                placeholder = "Norm: 18.5-24.9 kg/m2")),
            column(4, textInput("crp", 
                                value = NULL, 
@@ -220,12 +220,26 @@ server <- function(input, output, session) {
   
   # extract and preprocess patient input data
   patient_data <- eventReactive(input$submit, {
-    # error handling - ensure all inputs are entered
+    # error handling - ensure all inputs are entered correctly
     validate(
-      need(input$age, "Please enter patient's age."),
-      need(input$sex, "Please select patient's gender."),
-      need(input$bmi, "Please enter patient's BMI."),
-      need(input$crp, "Please enter patient's latest c-reactive protein (mg/L) lab result values. If not known, enter `0`."),
+
+      # numerical limits
+      need(input$age != '', 
+           'Please enter your age.'),
+      
+      need((as.numeric(input$age) >= 18 && as.numeric(input$age) <= 99),
+           "Invalid age. Age must be between 18 and 99."),
+
+      need((as.numeric(input$bmi) >= 12 && as.numeric(input$bmi) <= 45) || (input$bmi == ''),
+           "Invalid BMI. BMI must be between 12 and 45. Leave blank if unknown."),
+
+      need((as.numeric(input$crp) >= 0 && as.numeric(input$crp) <= 200) || (input$crp == ''),
+           "Invalid c-reactive protein (CRP) lab result value. CRP must be between 0 and 200 mg/L. Leave blank if unknown."),
+
+      need((as.numeric(input$cdai) >= 0 && as.numeric(input$cdai) <= 600) || (input$cdai == ''),
+           "Invalid Crohn's Disease Activity Index (CDAI). CDAI must be between 0 and 600. Leave blank if unknown."),
+
+      # missing inputs
       need(input$tnf, "Please select if your patient has taken anti-tumor necrosis factor drugs in the past."),
       need(input$ste, "Please select if your patient is currently on a steroid."),
       need(input$imm, "Please select if your patient is currently on an immunosuppressant"),
@@ -273,17 +287,6 @@ server <- function(input, output, session) {
       
     result
   })
-
-  # generate outputs
-  ## more error handling - prevent error messages from being displayed in output section
-  valid_input <- eventReactive(input$submit, {
-    if (input$age == "" | input$sex == "" | input$bmi == "" | input$crp == "" |
-        input$tnf == "" | input$ste == "" | input$imm == "" | input$loc == "") {
-      return(FALSE)
-    } else {
-      return(TRUE)
-    }
-  })
   
   rtitle <- eventReactive(input$submit, {
     # ensure title isn't printed before submit button is pressed
@@ -295,9 +298,9 @@ server <- function(input, output, session) {
     GenerateScripts( preferences(), response() )
   })
   
-  output$rtitle  <- renderText( ifelse(!valid_input(), "", rtitle()) )
-  output$results <- renderText( ifelse(!valid_input(), "", paste( script() )) )
-  output$plot    <- renderPlot( GenereateResultPlot( response() ) )
+  output$rtitle  <- renderText( rtitle() )
+  output$results <- renderText( paste(script()) )
+  output$plot    <- renderPlot( GenereateResultPlot( preferences(), response() ) )
 }
 
 ################################################################################

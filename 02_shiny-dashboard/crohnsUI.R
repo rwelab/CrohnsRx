@@ -26,6 +26,8 @@ Center <- function(raw_data) {
   bin.map <- c("Yes"=1, "No"=0)
   sex.map <- c("Female"=0, "Male"=1)
   
+  # account for missing input data
+  # reading text input: missing values are ""
   raw_data$CDAI <- ifelse(raw_data$CDAI == '', 300, raw_data$CDAI)
   raw_data$Age  <- ifelse(raw_data$Age  == '', 35, raw_data$Age)
   raw_data$BMI  <- ifelse(raw_data$BMI  == '', 20, raw_data$BMI)
@@ -49,6 +51,8 @@ Center <- function(raw_data) {
     Ileal              = bin.map[as.character(raw_data['Ileal'])] 
   )
   
+  print(cent_data)
+  
   return(cent_data)
 }
 
@@ -70,43 +74,38 @@ GenerateScripts <- function(ranking, response) {
   
   if (ranking$p12_ohe == 0 & ranking$p23_ohe == 0) {
     
+    prob1 <- as.integer(mean(probability))
+    
     recommendation_text <- sprintf("Your patient is predicted as having greatest 
                                    efficacy with %s, %s, or %s treatment, with a 
-                                   %d%%, %d%%, or %d%% probability of reaching 
-                                   clinical response respectively. The evidence 
-                                   favoring these treatment recommendations is not
-                                   statistically significant, according to the 
-                                   underlying model. Clinical response is defined 
-                                   as CDAI reduction of 100 or more points after 
-                                   6 weeks of treatment.", 
+                                   %d%% probability of reaching 
+                                   clinical response. 
+                                   Clinical response is defined as CDAI reduction 
+                                   of 100 or more points after 6 weeks of treatment.", 
                                    drug_recommendations[1], drug_recommendations[2], drug_recommendations[3], 
-                                   probability[1], probability[2], probability[3])
+                                   prob1)
     
   } else if (ranking$p12_ohe == 0 & ranking$p23_ohe == 1) {
     
+    prob1 <- as.integer(mean(probability[1:2]))
+    
     recommendation_text <- sprintf("Your patient is predicted as having greatest 
                                    efficacy with %s or %s treatment, with a 
-                                   %d%% or %d%% probability of reaching 
-                                   clinical response respectively. The evidence 
-                                   favoring these treatment recommendations is 
-                                   statistically significant, according to the 
-                                   underlying model. Clinical response is defined 
-                                   as CDAI reduction of 100 or more points after 
-                                   6 weeks of treatment.", 
+                                   %d%% probability of reaching 
+                                   clinical response. 
+                                   Clinical response is defined as CDAI reduction 
+                                   of 100 or more points after 6 weeks of treatment.", 
                                    drug_recommendations[1], drug_recommendations[2], 
-                                   probability[1], probability[2])
+                                   prob1)
   
   } else if (ranking$p12_ohe == 1) {
     
     recommendation_text <- sprintf("Your patient is predicted as having greatest 
                                    efficacy with %s treatment, with a 
                                    %d%% probability of reaching 
-                                   clinical response. The evidence 
-                                   favoring this treatment recommendation is 
-                                   statistically significant, according to the 
-                                   underlying model. Clinical response is defined 
-                                   as CDAI reduction of 100 or more points after 
-                                   6 weeks of treatment.", 
+                                   clinical response. 
+                                   Clinical response is defined as CDAI reduction 
+                                   of 100 or more points after 6 weeks of treatment.", 
                                    drug_recommendations[1], 
                                    probability[1])
     
@@ -119,19 +118,54 @@ GenerateScripts <- function(ranking, response) {
 
 #------------------------------------------------------------------------------#
 
-GenereateResultPlot <- function(response) {
-  dat3 <- data.frame(
-    DrugClass = c('Anti-TNF',
-                  'Anti-IL-12/23',
-                  'Anti-Integrin'), 
-    Response  = c(response$tnfi.response, 
-                  response$il12.response, 
-                  response$intg.response)
-  )
+GenereateResultPlot <- function(ranking, response) {
+  
+  titles <- c("il12" = 'Anti-Interleukin (IL)-12/23', 
+              "intg" = 'Anti-Integrin', 
+              "tnfi" = 'Anti-Tumor Necrosis Factor (TNF)')
+  
+  probs <- c('il12' = as.integer(100*response$il12.response), 
+             'intg' = as.integer(100*response$intg.response), 
+             'tnfi' = as.integer(100*response$tnfi.response))
+  
+  drug_recommendation <- c(titles[ranking$drug1], titles[ranking$drug2], titles[ranking$drug3])
+  probability <- c(probs[ranking$drug1], probs[ranking$drug2], probs[ranking$drug3])
+  
+  if(ranking$p12_ohe == 0 & ranking$p23_ohe == 0) {
+    
+    dat3 <- data.frame(
+      DrugClass = c(paste(drug_recommendation[1], drug_recommendation[2], drug_recommendation[3], sep = ' or ')), 
+      Response  = c(mean(probability[1:3]))
+    )
+    
+  } else if(ranking$p12_ohe == 0 & ranking$p23_ohe == 1) {
+    
+    dat3 <- data.frame(
+      DrugClass = c(paste(drug_recommendation[1], drug_recommendation[2], sep = ' or '), 
+                    drug_recommendation[3]), 
+      Response  = c(mean(probability[1:2]), 
+                    probability[3])
+    )
+    
+  } else if(ranking$p12_ohe == 1 & ranking$p23_ohe == 0) {
+    
+    dat3 <- data.frame(
+      DrugClass = c(drug_recommendation[1], 
+                    paste(drug_recommendation[2], drug_recommendation[3], sep = ' or ')), 
+      Response  = c(probability[1], 
+                    mean(probability[2:3]))
+    )
+    
+  } else if(ranking$p12_ohe == 1 & ranking$p23_ohe == 1) {
+    dat3 <- data.frame(
+      DrugClass = c(drug_recommendation[1], drug_recommendation[2], drug_recommendation[3]),
+      Response  = c(probability[1], probability[2], probability[3])
+    )
+  }
   
   responseColor <- "#00AFBB"
     
-  p <- ggplot(dat3, aes(x=DrugClass, group=1)) +
+  p <- ggplot(dat3, aes(x=DrugClass)) +
     
     # effectiveness bar plot
     geom_bar(aes(y=Response), 
@@ -143,7 +177,9 @@ GenereateResultPlot <- function(response) {
     
     ggtitle("Drug Class Clinical Response Rates") + 
     ylab('Response Rate') +
-    xlab('Drug Class')
+    xlab('Drug Class') + 
+    scale_y_continuous(limits = c(0, 100), breaks = c(0, 20, 40, 60, 80, 100))
   
   return(p)
 }
+

@@ -54,7 +54,7 @@ predict.lme <- function(object, newdata, interval = c('none','confidence','predi
 
 #------------------------------------------------------------------------------#
 
-# REF: [add here]
+# REF: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6916346/#sim8386-sec-0020
 analytical <- function(object, newdata, model.name, interval = c('confidence','prediction'))
 {
   interval = match.arg(interval)
@@ -89,7 +89,7 @@ analytical <- function(object, newdata, model.name, interval = c('confidence','p
 
 #------------------------------------------------------------------------------#
 
-# REF: [add here]
+# REF: https://cran.r-project.org/web/packages/merTools/vignettes/Using_predictInterval.html
 bootstrap.CI <- function(object, newdata, model.name, nsim=100, parallel='no', ncpus=1, seed=1234)
 {
   
