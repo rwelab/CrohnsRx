@@ -24,7 +24,8 @@ crohns_data1 <- read.csv("data/crohns_data_raw.csv") %>%
     Year_Cent, CDAI_baseline_Cent, Age_Cent, BMI_Cent, CRP_Cent, 
     HxOfTNFi, Sex_Male, SteroidUse, ImmUse, Ileal, 
     # Dependent variables
-    CDAI_reduction)
+    CDAI_reduction, 
+    ActiveIngredient,TNFi_Active,Il12_Active,Integrin_Active)
 
 crohns_data1 %>% glimpse()
 
@@ -148,6 +149,26 @@ ranef(rm_intg)
 anova(rm_tnfi, int_tnfi)
 anova(rm_il12, int_il12)
 anova(rm_intg, int_intg)
+
+#------------------------------------------------------------------------------#
+
+library(multcompView)
+
+model=lm( rm_h2h_tnfi$Drug_reduction ~ rm_h2h_tnfi$ActiveIngredient )
+ANOVA=aov(model)
+TUKEY <- TukeyHSD(x=ANOVA, conf.level=0.95)
+plot(TUKEY , las=1)
+
+model=lm( rm_h2h_intg$Drug_reduction ~ rm_h2h_intg$ActiveIngredient )
+ANOVA=aov(model)
+TUKEY <- TukeyHSD(x=ANOVA, conf.level=0.95)
+plot(TUKEY , las=1)
+
+# two models
+# - column for each drug (one hot encoding)
+# - 1) fit with leaving one hot encoding out
+# - 2) fit with one hot encoding columns
+# - likelihood ratio test
 
 #------------------------------------------------------------------------------#
 
