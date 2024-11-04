@@ -1,6 +1,0 @@
-drug_exposure_id,person_id,drug_concept_id,drug_exposure_start_date,drug_exposure_end_date,drug_type_concept_id,stop_reason,refills,quantity,days_supply,sig,route_concept_id,effective_drug_dose,dose_unit_concept_id,lot_number,provider_id,visit_occurrence_id,drug_source_value,drug_source_concept_id,route_source_value,dose_unit_source_value,drug_exposure_start_datetime,drug_exposure_end_datetime,verbatim_end_date,visit_detail_id
-1,1,40825614,1/1/2000,1/1/2000,32818,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,100,10,70476,646370803,NULL,NULL,NULL,NULL,NULL,NULL
-2,1,1972450,1/1/2000,1/1/2000,32818,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,100,20,14757,646370803,NULL,NULL,NULL,NULL,NULL,NULL
-3,1,1972450,1/1/2000,1/1/2000,32827,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,100,21,396456003,4245351,NULL,NULL,NULL,NULL,NULL,NULL
-4,2,19099981,1/1/2000,1/1/2000,646370719,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,200,30,591219130,646370804,NULL,NULL,NULL,NULL,NULL,NULL
-5,2,975505,1/1/2000,1/1/2000,646370719,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,200,31,66663070201,646370804,NULL,NULL,NULL,NULL,NULL,NULL
