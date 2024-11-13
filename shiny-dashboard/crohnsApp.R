@@ -207,7 +207,7 @@ server <- function(input, output, session) {
   # Output
   output$rtitle  <- renderText( title() )
   output$results <- renderText( GenerateScripts( data() ) )
-  output$plot    <- renderPlot( GenereateResultPlot( data() ) )
+  output$plot    <- renderPlot( GenerateResultPlot( data() ) )
 }
 
 ################################################################################

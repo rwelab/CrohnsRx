@@ -1,4 +1,5 @@
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(lme4)
 library(merTools)
@@ -179,7 +180,11 @@ formatDrugPref <- function(data) {
     recommendation <- paste(title.map[idx], collapse = " or ")
     recommendation <- paste(unlist(recommendation), collapse='')
     response <- mean(resp.map[idx])
-    res <- rbind(res, c(recommendation, response))
+    if(recommendation != "") { res <- rbind(res, c(recommendation, response)) }
+  }
+  
+  if( length(res)==0 ){
+    return(0)
   }
   
   res <- as.data.frame(res)
@@ -199,18 +204,32 @@ formatDrugPref <- function(data) {
   # res <- list(First = First, Second = Second, Third = Third)
 }
 
+# data <- data.frame(
+#   drug1 = 'tnfi',
+#   drug2 = 'intg',
+#   drug3 = 'il12',
+#   p12_ohe = 1,
+#   p23_ohe = 0,
+#   tnfi.response = 0.96,
+#   intg.response = 0.84,
+#   il12.response = 0.76,
+#   omit_tnfi = 0,
+#   omit_il12 = 0,
+#   omit_intg = 0
+# )
+
 ################################################################################
 # GENERATE RESULT SCRIPT
 ################################################################################
 
 # output drug class recommendation script
 GenerateScripts <- function(data) {
-  if ( any(is.na(data[1,])) ) {
+  if ( identical(data,0) ) {
     script <- "Based on your responses, none of the following three drug classes (Anti-Tumor Necrosis Factor (TNF), Anti-Integrin, Anti-Interleukin (IL)-12/23) would be suitable for your patient. Consider other options (e.g. anti-JAKs, surgery, immunomodulators, nutritional modification, steroids)."
   } else {
     firstLine = data[1,]
-    script <- sprintf("Your patient is predicted as having greatest efficacy with %s, with a %s%% probability of reaching clinical response. Clinical response is defined as CDAI reduction of 100 or more points after 6 weeks of treatment.", 
-                      firstLine[[1]], as.character(firstLine[[2]])) 
+    script <- sprintf("Your patient is predicted as having greatest efficacy with %s, with a %0.2f%% probability of reaching clinical response. Clinical response is defined as CDAI reduction of 100 or more points after 6 weeks of treatment.", 
+                      firstLine[[1]], firstLine[[2]]) 
   }
   return(script)
 }
@@ -219,9 +238,9 @@ GenerateScripts <- function(data) {
 # GENERATE RESULT PLOT
 ################################################################################
 
-GenereateResultPlot <- function(data) {
+GenerateResultPlot <- function(data) {
   
-  if ( any(is.na(data[1,])) ) { return(0) }
+  if ( identical(data,0) ) { return(0) }
   
   responseColor <- "#00AFBB"
   p <- ggplot(data, aes(x=Recommendation)) +
@@ -368,7 +387,7 @@ rank.drugs <- function(data) {
     ##  1 il12     1
     ##  1 intg     2
     ##  ...
-    pivot_longer(cols = c(tnfi, il12, intg), names_to = "drug", values_to = "rank") %>% 
+    tidyr::pivot_longer(cols = c(tnfi, il12, intg), names_to = "drug", values_to = "rank") %>% 
     
     # sort drug classes from rank 1 to 3
     ## id drug  rank
@@ -382,7 +401,7 @@ rank.drugs <- function(data) {
     ## id drug1  drug2  drug3
     ##  1  il12   intg   tnfi
     ##  ...
-    pivot_wider(names_from = rank, values_from = drug, names_prefix = "drug") %>%
+    tidyr::pivot_wider(names_from = rank, values_from = drug, names_prefix = "drug") %>%
     ungroup() %>% 
     dplyr::select(-id)
   
