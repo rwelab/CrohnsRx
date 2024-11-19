@@ -1,4 +1,4 @@
-# Sequential Regression and Simulation (SRS)
+# Personalizing treatment selection in Crohn's disease
 Analytical code accompanying the manuscript "[Personalizing treatment selection in Crohn’s disease: a meta-analysis of individual participant data from fifteen randomized controlled trials](https://www.medrxiv.org/content/10.1101/2023.11.10.23291837v1)" by Rudrapatna et al., 2023
 
 ## How to Use
@@ -57,9 +57,5 @@ knitr::kable(srs.sbgrps)
 |integrin = tnfi > il12 |     1|
 |tnfi > integrin > il12 |     1|
 
-## To-do List
-
-* Package code
-* Submit to CRAN
-
 ## Contact
+vivek.rudrapatna@ucsf.edu
