@@ -6,49 +6,40 @@ Analytical code accompanying the manuscript "[Personalizing treatment selection 
 # Load data
 crohns <- read.csv("data/crohns_biologics_sample.csv")
 # crohns %>% glimpse()
+load("data/formula.RData")
+# print(formula)
 
 # Load functions
 source("R/srs.R")
 source("R/predict.R")
 source("R/subgroups.R")
 
-# Step 1 : Train placebo attributable srs model
-srs.plac <- srs.placebo(data               = crohns, 
-                        rand.var           = Trial,
-                        treatment          = Treatment,
-                        outcome            = CDAI_reduction,
-                        placebo.label      = "Placebo")
+# Step1: Run Sequential Regression and Simulation (SRS)
+srs.obj <- srs(formula         = formula, 
+               data            = crohns, 
+               treatment.field = Treatment, 
+               placebo.label   = "Placebo",
+               exclude.cov     = c("Year_Cent"))
 
-# Step 2 : Train drug attributable srs models
-srs.drug <- srs.active(data                = crohns, 
-                       srs.plac            = srs.plac, 
-                       rand.var            = Trial, 
-                       treatment           = Treatment,
-                       outcome             = CDAI_reduction,
-                       placebo.label       = "Placebo",
-                       exclude.covariates  = c("Year_Cent"))
+# summary(srs.obj$PlaceboModel)
+# summary(srs.obj$DrugModels$TNFi)
+# summary(srs.obj$DrugModels$IL12)
+# summary(srs.obj$DrugModels$Integrin)
 
-# summary(srs.plac)
-# summary(srs.drug$tnfi)
-# summary(srs.drug$il12)
-# summary(srs.drug$integrin)
-
-# Step 3 : Predict treatment counterfactuals (cf) using srs models
-#
-# Predicting drug attributable effects and 95% CI using parametric bootstrapping
-# (nsim = 10k). Leveraging parallel processing (ncpus=8); ~80 sec compute.
-srs.cf <- batch.srs.predict(object.list = srs.drug, 
+# Step 2: Predict treatment counterfactuals (cf) + 95% CI using parametric bootstrapping
+srs.cf <- batch.srs.predict(object.list = srs.obj$DrugModels, 
                             newdata     = crohns, 
                             level       = 0.95,
                             interval    = 'confidence', 
                             method      = 'bootstrap', 
-                            nsim        = 10000, 
-                            parallel    = 'multicore', 
-                            ncpus       = 8, 
+                            nsim        = 100,
+                            parallel    = "no",
+                            ncpus       = 1,
                             seed        = 1234)
+# srs.cf %>% glimpse()
 
-# Step 4 : Summarise subgroups
-srs.sbgrps <- srs.summarise( srs.subgroups(srs.cf, srs.drug) )
+# Step 3: Summarize subgroups
+srs.sbgrps <- srs.summarise( srs.subgroups(srs.cf, srs.obj$DrugModels) )
 knitr::kable(srs.sbgrps)
 
 ```
