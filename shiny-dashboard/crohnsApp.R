@@ -23,11 +23,6 @@ ui_disclaimer <- function() {
 
 ui_recommender <- function() {
   
-  column(8, selectizeInput("q_tnfi", 
-                            choices = c('No / Yes' = '', "No", "Yes"), 
-                            selected = NULL, 
-                            label = ""))
-  
   column(width = 12, 
          
          tags$hr(style="border-color: grey;"), # grey divider bar
