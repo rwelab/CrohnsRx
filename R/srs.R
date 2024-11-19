@@ -39,7 +39,7 @@ srs <- function(formula, data=NULL, treatment.field=NULL, placebo.label="Placebo
 
   # Infer Drug Attributable Effects
   active_df$ObsTotalEffect     <- active_df[[ PLACEBO.RESP ]]
-  active_df$PredPlaceboEffect  <- lme4::predict(srs.plac, newdata=active_df, re.form=~0)
+  active_df$PredPlaceboEffect  <- predict(srs.plac, newdata=active_df, re.form=~0)
   active_df$InferredDrugEffect <- active_df[[ PLACEBO.RESP ]] - active_df$PredPlaceboEffect
 
   # Train Drug Attributable Models
@@ -66,6 +66,9 @@ updateFormula <- function(orig.formula, new.response=NULL, exclude.cov=list()) {
   
   return(formula2)
 }
+
+rhs.vars <- function(f) { as.character(attr(terms(f), "term.labels")) }
+lhs.vars <- function(f) { as.character(attr(terms(formula), "variables")[[2]])  }
 
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#

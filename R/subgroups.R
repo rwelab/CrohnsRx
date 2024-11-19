@@ -17,7 +17,7 @@ library(dplyr)
 
 #------------------------------------------------------------------------------#
 
-srs.subgroups <- function(data, model.list, placebo.label="Placebo", fit.label=".attrib", se.label=".se") {
+srs.subgroups <- function(data, model.list, placebo.label="Placebo", fit.label=".attrib", se.label=".se", df=NULL) {
   
   # columns
   col.rem   <- srs.begins_with(data, tolower(placebo.label))
@@ -26,7 +26,8 @@ srs.subgroups <- function(data, model.list, placebo.label="Placebo", fit.label="
   
   # vectors
   vec.lab   <- gsub(fit.label,"",col.y)  # get trt names
-  vec.df    <- srs.df(model.list)        # get model degrees of freedom
+  if (is.null(df)) { vec.df <- srs.df(model.list) }
+  if (!is.null(df)){ vec.df <- df }      # get model degrees of freedom
   
   # matrices
   mat.Yhat  <- unname(as.matrix(data[,col.y]))  # get fit columns
@@ -200,6 +201,15 @@ srs.isEqual <- function(target, current) {
   isEqual <- mapply(is_logically_equivalent, target, current)
   res <- data.frame(target, current, isEqual)
   return(res)
+}
+
+isEqual.pct <- function(target, current) {
+  res <- srs.isEqual(target, current)
+  mean(res$isEqual)
+} 
+
+noPref.pct <- function(data) {
+  nrow(data %>% filter(p1.ohe=='=' & p2.ohe=='=')) / nrow(data)
 }
 
 #------------------------------------------------------------------------------#
