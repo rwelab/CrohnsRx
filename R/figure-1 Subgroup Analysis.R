@@ -345,5 +345,17 @@ ggsave(filename = 'images/figure-2.pdf',
        plot = subgroup.final, 
        width = 12, height = 9, units='in', dpi=300)
 
+ggsave(filename = 'images/figure-2.jpeg', 
+       plot = subgroup.final, 
+       width = 12, height = 9, units='in', dpi=300)
+
+ggsave(filename = 'images/figure-2.png', 
+       plot = subgroup.final, 
+       width = 12, height = 9, units='in', dpi=300)
+
+ggsave(filename = 'images/figure-2.tiff', 
+       plot = subgroup.final, 
+       width = 12, height = 9, units='in', dpi=300)
+
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
